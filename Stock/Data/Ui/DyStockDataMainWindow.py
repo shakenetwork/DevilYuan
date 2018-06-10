@@ -306,11 +306,6 @@ class DyStockDataMainWindow(DyBasicMainWindow):
 
         # 创建菜单
         menuBar = self.menuBar()
-        
-        # 添加菜单
-        histTicksMenu = menuBar.addMenu('历史分笔')
-        histTicksMenu.addAction(self._histTicksMannualUpdateAction)
-        histTicksMenu.addAction(self._histTicksVerifyAction)
 
         # 添加菜单
         histDaysMenu = menuBar.addMenu('历史日线')
@@ -318,6 +313,11 @@ class DyStockDataMainWindow(DyBasicMainWindow):
         histDaysMenu.addAction(self._histDaysMannualUpdateAction)
         histDaysMenu.addAction(self._histDaysForcedUpdateAction)
         histDaysMenu.addAction(self._manualUpdateSectorCodeTableAction)
+        
+        # 添加菜单
+        histTicksMenu = menuBar.addMenu('历史分笔')
+        histTicksMenu.addAction(self._histTicksMannualUpdateAction)
+        histTicksMenu.addAction(self._histTicksVerifyAction)
     
         # 添加菜单
         dataMenu = menuBar.addMenu('数据')
