@@ -42,7 +42,7 @@ DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能�
         - 同时客户端不能最小化也不能处于精简模式
 - 安装[Wind个人免费Python接口](http://dajiangzhang.com/document) **(可选)**
     - 若不安装Wind接口，股票代码表，交易日数据和历史日线数据将使用TuShare接口。TuShare这一块的数据更新速度比较慢。并且Wind的复权因子数据比较准确，建议安装Wind。但Wind的接口对数据流量有限制。
-- 到[Server酱](http://sc.ftqq.com/3.version)注册一个SCKEY，这样实盘时的信号可以铃声通知 **(可选)**
+- 到[Server酱](http://sc.ftqq.com/3.version)注册一个SCKEY，这样实盘时的信号可以微信铃声通知 **(可选)**
 - 安装[Vistual Studio社区版](https://www.visualstudio.com/zh-hans/)，并勾选Python插件 **(可选)**
     - 本项目是用VS2017开发的。你可以选择是用VS2017，或者用其他IDE 
 - 需要安装的Python包
