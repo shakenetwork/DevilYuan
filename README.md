@@ -1,6 +1,6 @@
 # DevilYuan股票量化系统
 ### 简介
-DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能：
+DevilYuan股票量化系统由python编写，支持python3.4及以上版本，有如下功能：
 - 可视化（基于PyQT的界面）
 - 多线程事件引擎
 - 四大功能
@@ -31,7 +31,7 @@ DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能�
 
 # 运行前的准备
 - 支持的操作系统：Windows 7/8/10
-- 安装[Anaconda](https://www.anaconda.com/download/)，python3.4+ 64位版本
+- 安装[Anaconda](https://www.anaconda.com/download/)，python3.4及以上版本 64位版本(32位应该也可以，但没测试过)
 - 安装[MongoDB](https://www.mongodb.com/download-center#production)，并将[MongoDB配置为系统服务](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#configure-a-windows-service-for-mongodb-community-edition)
     -  由于个股历史分笔数据比较大，建议配备1T以上的硬盘
     -  [MogonDB客户端](https://robomongo.org/download)
