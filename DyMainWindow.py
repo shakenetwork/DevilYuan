@@ -171,6 +171,7 @@ class DyMainWindow(QMainWindow, Ui_MainWindow):
         DyStockAccountConfigDlg().exec_()
 
     def _config(self):
+        DyCommon.exePath = os.path.dirname(__file__)
         DyStockConfig.config()
 
 

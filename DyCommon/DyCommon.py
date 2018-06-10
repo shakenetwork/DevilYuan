@@ -465,6 +465,8 @@ class DyProgress(object):
 
 
 class DyCommon:
+    exePath = None # @DyMainWindow.py的所在目录
+
     def toNumber(v):
         """
             优先转成int，float，若没法转换，则返回本身值。
@@ -494,7 +496,7 @@ class DyCommon:
         """
             @path: like 'Stock/User/Config', use linux format
         """
-        parentPath = os.getcwd()
+        parentPath = DyCommon.exePath
         parentPathList = parentPath.split(os.path.sep)
         parentPath = os.path.sep.join(parentPathList[:-1])
 
