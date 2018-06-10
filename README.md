@@ -1,6 +1,6 @@
 # DevilYuan股票量化系统
 ### 简介
-DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能：
+DevilYuan股票量化系统由python编写，支持python3.4及以上版本，有如下功能：
 - 可视化（基于PyQT的界面）
 - 多线程事件引擎
 - 四大功能
@@ -31,8 +31,8 @@ DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能�
 
 # 运行前的准备
 - 支持的操作系统：Windows 7/8/10
-- 安装[Anaconda](https://www.anaconda.com/download/)，python3.4+ 64位版本
-- 安装[MongoDB](https://www.mongodb.com/download-center#production)，并将[MongoDB配置为系统服务](hhttps://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#configure-a-windows-service-for-mongodb-community-edition)
+- 安装[Anaconda](https://www.anaconda.com/download/)，python3.4及以上版本 64位版本(32位应该也可以，但没测试过)
+- 安装[MongoDB](https://www.mongodb.com/download-center#production)，并将[MongoDB配置为系统服务](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#configure-a-windows-service-for-mongodb-community-edition)
     -  由于个股历史分笔数据比较大，建议配备1T以上的硬盘
     -  [MogonDB客户端](https://robomongo.org/download)
 -  实盘交易现在支持的是银河证券，请安装对应的PC客户端
@@ -42,7 +42,7 @@ DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能�
         - 同时客户端不能最小化也不能处于精简模式
 - 安装[Wind个人免费Python接口](http://dajiangzhang.com/document) **(可选)**
     - 若不安装Wind接口，股票代码表，交易日数据和历史日线数据将使用TuShare接口。TuShare这一块的数据更新速度比较慢。并且Wind的复权因子数据比较准确，建议安装Wind。但Wind的接口对数据流量有限制。
-- 到[Server酱](http://sc.ftqq.com/3.version)注册一个SCKEY，这样实盘时的信号可以铃声通知 **(可选)**
+- 到[Server酱](http://sc.ftqq.com/3.version)注册一个SCKEY，这样实盘时的信号可以微信铃声通知 **(可选)**
 - 安装[Vistual Studio社区版](https://www.visualstudio.com/zh-hans/)，并勾选Python插件 **(可选)**
     - 本项目是用VS2017开发的。你可以选择是用VS2017，或者用其他IDE 
 - 需要安装的Python包
@@ -63,7 +63,7 @@ DevilYuan股票量化系统由python编写，支持python3.4+，有如下功能�
     - gunicorn
 
 # 运行
-`python DyMainWindow.py`
+因为程序需要读写文件，请到DevilYuan目录夹下以管理者权限运行`python DyMainWindow.py`
 
 # 运行后的步骤
 1. [配置DeviYuan系统](https://github.com/moyuanz/DevilYuan/blob/master/docs/Config.md)
