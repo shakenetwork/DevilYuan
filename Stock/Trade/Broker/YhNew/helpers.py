@@ -11,8 +11,8 @@ def recognize_verify_code(image_path, broker='ht'):
     if broker == 'yh_client':
         return detect_yh_client_result(image_path)
 
-    # 调用 tesseract 识别
-    return default_verify_code_detect(image_path)
+    # no default tesseract 识别
+    raise ValueError('不支持的验证码识别')
 
 def detect_yh_client_result(image_path):
     """封装了tesseract的识别，部署在阿里云上，服务端源码地址为： https://github.com/shidenggui/yh_verify_code_docker"""

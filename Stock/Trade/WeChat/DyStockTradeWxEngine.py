@@ -227,6 +227,7 @@ class DyStockTradeWxEngine(object):
 
         # sent to WX
         self._sendWx(text)
+        self._sendWxViaFt("测试消息", text)
 
     def _stockMarketStrengthUpdateFromUiHandler(self, event):
         """

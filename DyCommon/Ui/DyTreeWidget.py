@@ -71,7 +71,7 @@ class DyTreeWidget(QTreeWidget):
             # leaf
             if childItem.childCount() == 0:
                 if childItem.checkState(0) == Qt.Checked:
-                    field = self.__GetFieldByShowName(ManualUpdateDialog.Fields, childItem.text(0))
+                    field = self.__GetFieldByShowName(self._fields, childItem.text(0))
                     fields.append(field)
                 continue
             
