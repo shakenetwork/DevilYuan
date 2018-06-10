@@ -63,7 +63,7 @@ DevilYuan股票量化系统由python编写，支持python3.4及以上版本，�
     - gunicorn
 
 # 运行
-因为程序需要读写文件，需要以管理者权限运行`python DyMainWindow.py`
+因为程序需要读写文件，请到DevilYuan目录夹下以管理者权限运行`python DyMainWindow.py`
 
 # 运行后的步骤
 1. [配置DeviYuan系统](https://github.com/moyuanz/DevilYuan/blob/master/docs/Config.md)
