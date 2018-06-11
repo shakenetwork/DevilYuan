@@ -542,6 +542,9 @@ class DyStockCtaTemplate(object):
 
             # 前一日
             date = self._ctaEngine.tDaysOffsetInDb(DyTime.getDateStr(date, -1))
+            if date is None: # if no enough data, we'll report an error. 2018.06.11
+                self._info.print('没有足够的历史数据，策略的准备数据载入失败', DyLogData.error)
+                return None
 
             # prepare
             data = self.prepare(date, self._ctaEngine.dataEngine, self._info, codes, self._ctaEngine.errorDataEngine, self._strategyParam, isBackTesting)
