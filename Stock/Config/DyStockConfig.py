@@ -6,6 +6,7 @@ from Stock.Common.DyStockCommon import DyStockCommon
 from ..Data.Engine.DyStockMongoDbEngine import DyStockMongoDbEngine
 from ..Trade.WeChat.DyStockTradeWxEngine import DyStockTradeWxEngine
 from ..Trade.Broker.YhNew.YhTrader import YhTrader
+from ..Data.Gateway.DyStockDataGateway import DyStockDataGateway
 
 
 class DyStockConfig(object):
@@ -37,6 +38,8 @@ class DyStockConfig(object):
                       "Yh": {"Account": "", "Password": "", "Exe": r"C:\Program Files\中国银河证券双子星3.2\Binarystar.exe"},
                       }
 
+    defaultTradeDaysMode = {"tradeDaysMode": "Verify"}
+
 
     def getDefaultHistDaysDataSource():
         if DyStockCommon.WindPyInstalled:
@@ -45,8 +48,7 @@ class DyStockConfig(object):
         return {"Wind": False, "TuShare": True}
 
     def _configStockHistDaysDataSource():
-        path = DyCommon.createPath('Stock/User/Config/Common')
-        file = os.path.join(path, 'DyStockHistDaysDataSource.json')
+        file = DyStockConfig.getStockHistDaysDataSourceFileName()
 
         # open
         try:
@@ -72,8 +74,7 @@ class DyStockConfig(object):
         return file
 
     def _configStockMongoDb():
-        path = DyCommon.createPath('Stock/User/Config/Common')
-        file = os.path.join(path, 'DyStockMongoDb.json')
+        file = DyStockConfig.getStockMongoDbFileName()
 
         # open
         try:
@@ -155,8 +156,30 @@ class DyStockConfig(object):
 
         return file
 
+    def _configStockTradeDaysMode():
+        file = DyStockConfig.getStockTradeDaysModeFileName()
+
+        # open
+        try:
+            with open(file) as f:
+                data = json.load(f)
+        except:
+            data = DyStockConfig.defaultTradeDaysMode
+
+        DyStockConfig.configStockTradeDaysMode(data)
+
+    def configStockTradeDaysMode(data):
+        DyStockDataGateway.tradeDaysMode = data["tradeDaysMode"]
+
+    def getStockTradeDaysModeFileName():
+        path = DyCommon.createPath('Stock/User/Config/Common')
+        file = os.path.join(path, 'DyStockTradeDaysMode.json')
+
+        return file
+
     def config():
         DyStockConfig._configStockHistDaysDataSource()
+        DyStockConfig._configStockTradeDaysMode()
         DyStockConfig._configStockMongoDb()
         DyStockConfig._configStockWxScKey()
         DyStockConfig._configStockAccount()

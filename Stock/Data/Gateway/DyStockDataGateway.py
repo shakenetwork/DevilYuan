@@ -289,6 +289,7 @@ class DyStockDataGateway(object):
         股票数据网络接口
         日线数据从Wind获取，分笔数据可以从新浪，腾讯，网易获取
     """
+    tradeDaysMode = "Verify" # default is verify between Wind and TuShare
 
 
     def __init__(self, eventEngine, info, registerEvent=True):
@@ -297,6 +298,8 @@ class DyStockDataGateway(object):
 
         if DyStockCommon.WindPyInstalled:
             self._wind = DyStockDataWind(self._info)
+        else:
+            self._wind = None
 
         if registerEvent:
             self._registerEvent()
@@ -330,6 +333,28 @@ class DyStockDataGateway(object):
             
         return None
 
+    def _determineTradeDays(self, windTradeDays, tuShareTradeDays):
+        def _errorResult():
+            if self.tradeDaysMode == "Verify":
+                return None
+            elif self.tradeDaysMode == "Wind":
+                return windTradeDays
+            else:
+                return tuShareTradeDays
+
+        logType = DyLogData.error if self.tradeDaysMode == "Verify" else DyLogData.warning
+
+        if windTradeDays is None or tuShareTradeDays is None or len(windTradeDays) != len(tuShareTradeDays):
+            self._info.print("Wind交易日数据{}跟TuShare{}不一致".format(windTradeDays, tuShareTradeDays), logType)
+            return _errorResult()
+            
+        for x, y in zip(windTradeDays, tuShareTradeDays):
+            if x != y:
+                self._info.print("Wind交易日数据{}跟TuShare{}不一致".format(windTradeDays, tuShareTradeDays), logType)
+                return _errorResult()
+
+        return windTradeDays # same
+
     def getTradeDays(self, startDate, endDate):
         """
             Wind可能出现数据错误，所以需要从其他数据源做验证
@@ -345,14 +370,7 @@ class DyStockDataGateway(object):
 
         # verify
         if 'Wind' in DyStockCommon.defaultHistDaysDataSource:
-            if windTradeDays is None or tuShareTradeDays is None or len(windTradeDays) != len(tuShareTradeDays):
-                self._info.print("Wind交易日数据{}跟TuShare{}不一致".format(windTradeDays, tuShareTradeDays), DyLogData.error)
-                return None
-
-            for x, y in zip(windTradeDays, tuShareTradeDays):
-                if x != y:
-                    self._info.print("Wind交易日数据{}跟TuShare{}不一致".format(windTradeDays, tuShareTradeDays), DyLogData.error)
-                    return None
+            tradeDays = self._determineTradeDays(windTradeDays, tuShareTradeDays)
 
         return tradeDays
 
@@ -362,6 +380,10 @@ class DyStockDataGateway(object):
         """
         # from Wind
         if 'Wind' in DyStockCommon.defaultHistDaysDataSource:
+            if self._wind is None:
+                self._info.print("没有安装WindPy", DyLogData.error)
+                return None
+
             windCodes = self._wind.getStockCodes()
             codes = windCodes
 
