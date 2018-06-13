@@ -548,6 +548,9 @@ class DyStockCtaTemplate(object):
 
             # prepare
             data = self.prepare(date, self._ctaEngine.dataEngine, self._info, codes, self._ctaEngine.errorDataEngine, self._strategyParam, isBackTesting)
+            if data is None:
+                self._info.print('策略准备数据失败', DyLogData.error)
+                return None
             try:
                 data = json.loads(json.dumps(data)) # Sometime there're non-python objects in @data, use this tricky way to convert to python objects.
             except:
@@ -584,6 +587,9 @@ class DyStockCtaTemplate(object):
 
             # prepare
             data = self.preparePos(date, self._ctaEngine.dataEngine, self._info, posCodes, self._ctaEngine.errorDataEngine, self._strategyParam, isBackTesting)
+            if data is None:
+                self._info.print('策略准备持仓数据失败', DyLogData.error)
+                return None
             try:
                 data = json.loads(json.dumps(data)) # Sometime there're non-python objects in @data, use this tricky way to convert to python objects.
             except:
