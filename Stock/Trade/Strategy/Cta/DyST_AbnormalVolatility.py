@@ -69,7 +69,7 @@ class DyST_AbnormalVolatility(DyStockCtaTemplate):
             处理准备数据除复权
             @preClose: 数据库里的前一日收盘价，由装饰器传入。具体策略无需关注。
         """
-        self.processDataAdj(tick, preClose, self._preparedPosData, ['ma10', 'm20'], keyCodeFormat=False)
+        self.processDataAdj(tick, preClose, self._preparedPosData, ['ma10', 'ma20'], keyCodeFormat=False)
 
     def _processAdj(self, tick):
         """ 处理除复权 """
