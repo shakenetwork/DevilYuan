@@ -21,7 +21,7 @@ class DyStockCommon(object):
                }
 
     # 板块指数
-    sz50Index = '000050.SH'
+    sz50Index = '000016.SH'
     hs300Index = '399300.SZ'
     zz500Index = '399905.SZ'
 
