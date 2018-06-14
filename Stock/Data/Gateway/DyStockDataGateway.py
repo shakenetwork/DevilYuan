@@ -598,6 +598,8 @@ class DyStockDataGateway(object):
             netEasyDf = self._getDaysFrom163(code, startDate, endDate).sort_index()
             netEasyDf = netEasyDf[netEasyDf['volume'] > 0] # drop停牌日期的数据
 
+            netEasyDf.index = pd.to_datetime(netEasyDf.index, format='%Y-%m-%d')
+
             # 从新浪获取复权因子，成交量是股。新浪的数据是后复权的，无复权方式是tushare根据复权因子实现的。
             sleep(self.tuShareDaysSleepTimeConst)
             sleep(self.tuShareDaysSleepTime)
