@@ -649,7 +649,7 @@ class DyStockDataGateway(object):
         sleep(self.tuShareDaysSleepTimeConst)
         try:
             df = ts.get_h_data(tuShareCode, startDate, endDate, index=True)
-            if df is None: # If no data, TuShare return None
+            if df is None or df.empty: # If no data, TuShare return None
                 df = pd.DataFrame(columns=['open', 'high', 'close', 'low', 'volume', 'amount'])
             else:
                 df = df.sort_index()
