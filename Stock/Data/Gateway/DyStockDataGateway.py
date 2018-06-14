@@ -291,6 +291,10 @@ class DyStockDataGateway(object):
     """
     tradeDaysMode = "Verify" # default is verify between Wind and TuShare
 
+    tuShareDaysSleepTimeConst = 5
+    tuShareDaysSleepTime = 0
+    tuShareDaysSleepTimeStep = 5
+
 
     def __init__(self, eventEngine, info, registerEvent=True):
         self._eventEngine = eventEngine
@@ -585,15 +589,30 @@ class DyStockDataGateway(object):
         """
             从TuShare获取个股日线数据
         """
+        print("{}, {} ~ {}".format(code, startDate, endDate))
+
         tuShareCode = code[:-3]
 
         try:
             # 从网易获取换手率
             netEasyDf = self._getDaysFrom163(code, startDate, endDate).sort_index()
+            netEasyDf = netEasyDf[netEasyDf['volume'] > 0] # drop停牌日期的数据
 
             # 从新浪获取复权因子，成交量是股。新浪的数据是后复权的，无复权方式是tushare根据复权因子实现的。
-            sinaDf = ts.get_h_data(tuShareCode, startDate, endDate, autype=None, drop_factor=False)
-            if sinaDf is None: # If no data, TuShare return None
+            sleep(self.tuShareDaysSleepTimeConst)
+            sleep(self.tuShareDaysSleepTime)
+
+            try:
+                sinaDf = ts.get_h_data(tuShareCode, startDate, endDate, autype=None, drop_factor=False)
+            except IOError: # We think Sina is anti-crawling
+                self.tuShareDaysSleepTime += self.tuShareDaysSleepTimeStep
+                print("Sina is anti-crawling, setting additional sleep time to {}s for each request".format(self.tuShareDaysSleepTime))
+                raise
+
+            if self.tuShareDaysSleepTime > 0:
+                self.tuShareDaysSleepTime -= self.tuShareDaysSleepTimeStep
+
+            if sinaDf is None or sinaDf.empty: # If no data, TuShare return None
                 sinaDf = pd.DataFrame(columns=['open', 'high', 'close', 'low', 'volume', 'amount', 'factor'])
             else:
                 sinaDf = sinaDf.sort_index()
@@ -604,6 +623,9 @@ class DyStockDataGateway(object):
         # construct new DF
         df = pd.concat([sinaDf[['open', 'high', 'close', 'low', 'volume', 'amount', 'factor']], netEasyDf['turnover']], axis=1)
         df.index.name = None
+
+        if df.isnull().sum().sum() > 0:
+            self._info.print("{}({})新浪日线和网易日线数据不一致[{}, {}]: {}".format(code, name, startDate, endDate), DyLogData.warning)
 
         # change to Wind's indicators
         df.reset_index(inplace=True) # 把时间索引转成列
@@ -624,8 +646,9 @@ class DyStockDataGateway(object):
         """
         tuShareCode = code[:-3]
 
+        sleep(self.tuShareDaysSleepTimeConst)
         try:
-            df = ts.get_h_data(tuShareCode, startDate, endDate)
+            df = ts.get_h_data(tuShareCode, startDate, endDate, index=True)
             if df is None: # If no data, TuShare return None
                 df = pd.DataFrame(columns=['open', 'high', 'close', 'low', 'volume', 'amount'])
             else:
@@ -655,34 +678,32 @@ class DyStockDataGateway(object):
     def _getFundDaysFromTuShare(self, code, startDate, endDate, fields, name=None):
         """
             从tushare获取基金（ETF）日线数据。
+            # !!!TuShare没有提供换手率，复权因子和成交额，所以只能假设。
+            # 策略针对ETF的，需要注意。
         """
         tuShareCode = code[:-3]
 
         try:
-            # 从凤凰网获取换手率，成交量是手（没有整数化过，比如2004.67手）
-            df = ts.get_hist_data(tuShareCode, startDate, endDate).sort_index()
-
             # 以无复权方式从腾讯获取OHCLV，成交量是手（整数化过）
             # 此接口支持ETF日线数据
-            #tcentDf = ts.get_k_data(code, startDate, endDate, autype=None).sort_index()
+            df = ts.get_k_data(tuShareCode, startDate, endDate, autype=None).sort_index()
         except Exception as ex:
             self._info.print("从TuShare获取{}({})日线数据[{}, {}]失败: {}".format(code, name, startDate, endDate, ex), DyLogData.error)
             return None
 
         df['volume'] = df['volume']*100
 
-        # !!!TuShare没有提供换手率和复权因子，所以只能假设。
+        # !!!TuShare没有提供换手率，复权因子和成交额，所以只能假设。
         # 策略针对ETF的，需要注意。
         df['turnover'] = 0
         df['factor'] = 1
+        df['amount'] = 0
         df.index.name = None
 
         # change to Wind's indicators
-        df.reset_index(inplace=True) # 把时间索引转成列
-        df.rename(columns={'index': 'datetime', 'amount': 'amt', 'turnover': 'turn', 'factor': 'adjfactor'}, inplace=True)
+        df.rename(columns={'date': 'datetime', 'amount': 'amt', 'turnover': 'turn', 'factor': 'adjfactor'}, inplace=True)
 
         # 把日期的HH:MM:SS转成 00:00:00
-        df['datetime'] = df['datetime'].map(lambda x: x.strftime('%Y-%m-%d'))
         df['datetime'] = pd.to_datetime(df['datetime'], format='%Y-%m-%d')
 
         # select according @fields
