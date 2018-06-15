@@ -623,8 +623,17 @@ class DyStockDataGateway(object):
             return None
 
         # construct new DF
-        df = pd.concat([sinaDf[['open', 'high', 'close', 'low', 'volume', 'amount', 'factor']], netEasyDf['turnover']], axis=1)
-        df.index.name = None
+        try:
+            df = pd.concat([sinaDf[['open', 'high', 'close', 'low', 'volume', 'amount', 'factor']], netEasyDf['turnover']], axis=1)
+            df.index.name = None
+        except Exception as ex:
+            print("netEasyDf")
+            print(netEasyDf)
+            print("sinaDf")
+            print(sinaDf)
+
+            self._info.print("从TuShare获取的{}({})日线数据[{}, {}]格式错误: {}".format(code, name, startDate, endDate, ex), DyLogData.error)
+            return None
 
         if df.isnull().sum().sum() > 0:
             self._info.print("{}({})新浪日线和网易日线数据不一致[{}, {}]: {}".format(code, name, startDate, endDate), DyLogData.warning)
