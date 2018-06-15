@@ -2,24 +2,12 @@ from DyCommon.Ui.DyTreeWidget import *
 from EventEngine.DyEvent import *
 from ...DyStockStrategyBase import *
 
-# CTA
-from ...Strategy.Cta.DyST_AbnormalVolatility import DyST_AbnormalVolatility
-from ...Strategy.Cta.DyST_IntraDayT import DyST_IntraDayT
-from ...Strategy.Cta.DyST_MaWalk import DyST_MaWalk
-from ...Strategy.Cta.DyST_BankIntraDaySpread import DyST_BankIntraDaySpread
+from . import DyStockTradeStrategyWidgetAutoFields
 
 
 class DyStockTradeStrategyWidget(DyTreeWidget):
-
-    strategyFields = \
-        [
-            ['CTA',
-                [DyST_AbnormalVolatility],
-                [DyST_IntraDayT],
-                [DyST_MaWalk],
-                [DyST_BankIntraDaySpread],
-            ],
-        ]
+    
+    strategyFields = DyStockTradeStrategyWidgetAutoFields
 
 
     def __init__(self, eventEngine):
@@ -27,7 +15,7 @@ class DyStockTradeStrategyWidget(DyTreeWidget):
         newFields = self._transform(self.__class__.strategyFields)
         
         super().__init__(newFields)
-        self.collapse('废弃')
+        self.collapse('Obsolete')
 
         self._eventEngine = eventEngine
 
