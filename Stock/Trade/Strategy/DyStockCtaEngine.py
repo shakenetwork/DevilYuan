@@ -1271,7 +1271,7 @@ class DyStockCtaBarAggFast:
             self._bars.setdefault(code, [None, None])
 
     def _createBar(self, refTick, tick, volume=0):
-        bar = DyStockCtaBarData()
+        bar = DyStockCtaBarData(str(self._barWidth) + 'm')
 
         bar.code = tick.code
         bar.name = tick.name
