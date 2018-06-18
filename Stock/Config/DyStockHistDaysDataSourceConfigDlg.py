@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 
-from PyQt5.QtWidgets import QDialog, QLabel, QCheckBox, QTextEdit, QPushButton, QGridLayout, QComboBox
+from PyQt5.QtWidgets import QDialog, QLabel, QCheckBox, QTextEdit, QPushButton, QGridLayout, QComboBox, QLineEdit
 
 from DyCommon.DyCommon import DyCommon
 from Stock.Common.DyStockCommon import DyStockCommon
@@ -59,6 +59,8 @@ class DyStockHistDaysDataSourceConfigDlg(QDialog):
         tradeDaysTextEdit.setPlainText(descriptionTradeDays)
         tradeDaysTextEdit.setReadOnly(True)
 
+        self._tuShareDaysIntervalLineEdit = QLineEdit() # TuShare日线数据每次下载间隔时间（秒）
+
         # 布局
         grid = QGridLayout()
         grid.setSpacing(10)
@@ -73,12 +75,16 @@ class DyStockHistDaysDataSourceConfigDlg(QDialog):
         grid.addWidget(self._tradeDaysComboBox, 6, 0)
         grid.addWidget(tradeDaysTextEdit, 7, 0)
 
+        grid.addWidget(QLabel("                                                                 "), 8, 0)
+        grid.addWidget(QLabel("TuShare日线数据下载间隔时间(秒)"), 9, 0)
+        grid.addWidget(self._tuShareDaysIntervalLineEdit, 10, 0)
+
         grid.addWidget(okPushButton, 0, 1)
         grid.addWidget(cancelPushButton, 1, 1)
  
         self.setLayout(grid)
 
-        # set data to UI
+        # set data source to UI
         if self._data.get('Wind'):
             self._windCheckBox.setChecked(True)
 
@@ -93,6 +99,9 @@ class DyStockHistDaysDataSourceConfigDlg(QDialog):
             if v == self._tradeDaysModeData["tradeDaysMode"]:
                 self._tradeDaysComboBox.setCurrentText(k)
                 break
+
+        # tushare days downloading interval
+        self._tuShareDaysIntervalLineEdit.setText(str(self._tuShareDaysIntervalData['interval']))
         
     def _read(self):
         # data source
@@ -113,8 +122,17 @@ class DyStockHistDaysDataSourceConfigDlg(QDialog):
         except:
             self._tradeDaysModeData = DyStockConfig.defaultTradeDaysMode
 
+        # interval of tushare days downloading
+        file = DyStockConfig.getStockTuShareDaysIntervalFileName()
+
+        try:
+            with open(file) as f:
+                self._tuShareDaysIntervalData = json.load(f)
+        except:
+            self._tuShareDaysIntervalData = DyStockConfig.defaultTuShareDaysInterval
+
     def _ok(self):
-        # get data from UI
+        # data source
         data = {'Wind': False, 'TuShare': False}
         if self._windCheckBox.isChecked():
             data['Wind'] = True
@@ -130,12 +148,26 @@ class DyStockHistDaysDataSourceConfigDlg(QDialog):
         with open(file, 'w') as f:
             f.write(json.dumps(data, indent=4))
 
+        # trade days mode
         data = {}
         data["tradeDaysMode"] = self.tradeDaysMode[self._tradeDaysComboBox.currentText()]
 
         DyStockConfig.configStockTradeDaysMode(data)
 
         file = DyStockConfig.getStockTradeDaysModeFileName()
+        with open(file, 'w') as f:
+            f.write(json.dumps(data, indent=4))
+
+        # tushare days downloading interval
+        try:
+            data = {}
+            data["interval"] = int(self._tuShareDaysIntervalLineEdit.text())
+        except:
+            data = DyStockConfig.defaultTuShareDaysInterval
+
+        DyStockConfig.configStockTuShareDaysInterval(data)
+
+        file = DyStockConfig.getStockTuShareDaysIntervalFileName()
         with open(file, 'w') as f:
             f.write(json.dumps(data, indent=4))
 
