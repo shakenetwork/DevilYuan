@@ -142,7 +142,7 @@ class DyStockBackTestingCtaEngine(object):
             # load ticks
             if not self._ticksEngine.loadCode(code, self._curTDay):
                 # 由于新浪分笔数据有时会缺失，所以不返回错误，只打印警告
-                self._info.print('{0}:{1}Ticks数据[{2}]载入失败'.format(code, self._daysEngine.stockCodes[code], self._curTDay), DyLogData.warning)
+                self._info.print('{0}:{1}Ticks数据[{2}]载入失败'.format(code, self._daysEngine.stockAllCodesFunds[code], self._curTDay), DyLogData.warning)
                 self._progress.update()
                 continue
 
@@ -162,7 +162,7 @@ class DyStockBackTestingCtaEngine(object):
                 tick = DyStockCtaTickData()
 
                 tick.code = code
-                tick.name = self._daysEngine.stockCodesFunds[code]
+                tick.name = self._daysEngine.stockAllCodesFunds[code]
 
                 tick.date = self._curTDay
                 tick.time = datetime.strftime('%H:%M:%S')
@@ -385,7 +385,7 @@ class DyStockBackTestingCtaEngine(object):
             # load ticks
             if not self._ticksEngine.loadCode(code, self._curTDay):
                 # 由于新浪分笔数据有时会缺失，所以不返回错误，只打印警告
-                self._info.print('{0}:{1}Ticks数据[{2}]载入失败'.format(code, self._daysEngine.stockCodes[code], self._curTDay), DyLogData.warning)
+                self._info.print('{0}:{1}Ticks数据[{2}]载入失败'.format(code, self._daysEngine.stockAllCodesFunds[code], self._curTDay), DyLogData.warning)
                 self._progress.update()
                 continue
 
