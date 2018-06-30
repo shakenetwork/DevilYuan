@@ -291,7 +291,7 @@ class DyStockDataGateway(object):
     """
     tradeDaysMode = "Verify" # default is verify between Wind and TuShare
 
-    tuShareDaysSleepTimeConst = 5
+    tuShareDaysSleepTimeConst = 2
     tuShareDaysSleepTime = 0
     tuShareDaysSleepTimeStep = 5
 

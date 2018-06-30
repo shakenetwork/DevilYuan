@@ -40,7 +40,7 @@ class DyStockConfig(object):
 
     defaultTradeDaysMode = {"tradeDaysMode": "Verify"}
 
-    defaultTuShareDaysInterval = {"interval": 5}
+    defaultTuShareDaysInterval = {"interval": 2}
 
 
     def getDefaultHistDaysDataSource():
