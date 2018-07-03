@@ -57,7 +57,7 @@ class SafeSession(requests.Session):
                                                         timeout,
                                                         allow_redirects, proxies, hooks, stream, verify, cert, json)
             except Exception as e:
-                print (e, format_exc())
+                print ("wxbot:request exception: ", e)
                 continue
 
         #重试3次以后再加一次，抛出异常
@@ -628,7 +628,7 @@ class WXBot:
                 self.schedule()
             except:
                 print ('[ERROR] Except in proc_msg')
-                print (format_exc())
+                #print (format_exc())
             check_time = time.time() - check_time
             if check_time < 0.8:
                 time.sleep(1 - check_time)
