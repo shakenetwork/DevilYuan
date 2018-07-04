@@ -76,7 +76,7 @@ DevilYuan股票量化系统由python编写，支持python3.4及以上版本，�
 - [tushare](https://github.com/waditu/tushare)
 - [easyquotation](https://github.com/shidenggui/easyquotation)
 - [easytrader](https://github.com/shidenggui/easytrader)
-
+- [wxBot](https://github.com/liuwons/wxBot)
 
 # 交流
 
